@@ -5,8 +5,8 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 FROM openjdk:17-jdk-alpine
-RUN addgroup -S proxy-app && adduser -S proxy-app -G proxy-app
-USER proxy-app:proxy-app
+RUN addgroup -S events-app && adduser -S events-app -G events-app
+USER events-app:events-app
 WORKDIR /app
 COPY --from=build /app/target/*.jar ./app.jar
 ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
