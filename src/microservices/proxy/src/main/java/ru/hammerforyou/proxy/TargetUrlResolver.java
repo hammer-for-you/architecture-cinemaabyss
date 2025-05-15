@@ -5,5 +5,5 @@ package ru.hammerforyou.proxy;
  */
 public interface TargetUrlResolver {
 
-    public String resolve(String path);
+    String resolve(String path);
 }

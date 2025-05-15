@@ -79,7 +79,7 @@ public class ProxyController {
         return headers;
     }
 
-    private record ProxyHealth(
+    public record ProxyHealth(
             boolean status
     ) {}
 }
