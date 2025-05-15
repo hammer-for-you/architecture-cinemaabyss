@@ -61,6 +61,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      HOST: 0.0.0.0
       PORT: 8080
       DB_CONNECTION_STRING: postgres://postgres:postgres_password@postgres:5432/cinemaabyss?sslmode=disable
     networks:
@@ -77,27 +78,28 @@ services:
     ports:
       - "8081:8081"
     environment:
+      HOST: 0.0.0.0
       PORT: 8081
       DB_CONNECTION_STRING: postgres://postgres:postgres_password@postgres:5432/cinemaabyss?sslmode=disable
     networks:
       - cinemaabyss-network
 
   # Events Microservice
-  events-service:
-    build:
-      context: ./src/microservices/events
-      dockerfile: Dockerfile
-    container_name: cinemaabyss-events-service
-    depends_on:
-      - postgres
-      - kafka
-    ports:
-      - "8082:8082"
-    environment:
-      PORT: 8082
-      KAFKA_BROKERS: kafka:9092
-    networks:
-      - cinemaabyss-network
+#  events-service:
+#    build:
+#      context: ./src/microservices/events
+#      dockerfile: Dockerfile
+#    container_name: cinemaabyss-events-service
+#    depends_on:
+#      - postgres
+#      - kafka
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      PORT: 8082
+#      KAFKA_BROKERS: kafka:9092
+#    networks:
+#      - cinemaabyss-network
 
   # Proxy Service (API Gateway)
   proxy-service:
@@ -108,7 +110,7 @@ services:
     depends_on:
       - monolith
       - movies-service
-      - events-service
+#      - events-service
     ports:
       - "8000:8000"
     environment:
@@ -117,7 +119,7 @@ services:
       MOVIES_SERVICE_URL: http://movies-service:8081
       EVENTS_SERVICE_URL: http://events-service:8082
       GRADUAL_MIGRATION: "true"
-      MOVIES_MIGRATION_PERCENT: "50"
+      MOVIES_MIGRATION_PERCENT: "80"
     networks:
       - cinemaabyss-network
 
