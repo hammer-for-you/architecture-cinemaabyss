@@ -223,7 +223,7 @@ cat .docker/config.json | base64
   ```
   11. Вызовите https://cinemaabyss.example.com/api/movies
   Вы должны увидеть вывод списка фильмов
-  Можно поэкспериментировать со значением   MOVIES_MIGRATION_PERCENT в src/kubernetes/configmap.yaml и убедится, что вызовы movies уходят полностью в новый сервис
+  Можно поэкспериментировать со значением MOVIES_MIGRATION_PERCENT в src/kubernetes/configmap.yaml и убедится, что вызовы movies уходят полностью в новый сервис
 
   12. Запустите тесты из папки tests/postman
   ```bash
@@ -233,8 +233,11 @@ cat .docker/config.json | base64
   Откройте логи event-service и сделайте скриншот обработки событий
 
 #### Шаг 3
-Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
+[Вывод при вызове https://cinemaabyss.example.com/api/movies](image/k8s-movies-service-request.png)
 
+[Вывод event-service после вызова тестов](image/k8s-events-service-log.png)
+
+[Тесты](image/k8s-postman-tests.png)
 
 # Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
