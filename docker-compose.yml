@@ -61,6 +61,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      HOST: 0.0.0.0
       PORT: 8080
       DB_CONNECTION_STRING: postgres://postgres:postgres_password@postgres:5432/cinemaabyss?sslmode=disable
     networks:
@@ -77,6 +78,7 @@ services:
     ports:
       - "8081:8081"
     environment:
+      HOST: 0.0.0.0
       PORT: 8081
       DB_CONNECTION_STRING: postgres://postgres:postgres_password@postgres:5432/cinemaabyss?sslmode=disable
     networks:
@@ -117,7 +119,7 @@ services:
       MOVIES_SERVICE_URL: http://movies-service:8081
       EVENTS_SERVICE_URL: http://events-service:8082
       GRADUAL_MIGRATION: "true"
-      MOVIES_MIGRATION_PERCENT: "50"
+      MOVIES_MIGRATION_PERCENT: "80"
     networks:
       - cinemaabyss-network
 

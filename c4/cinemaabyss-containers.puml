@@ -1,0 +1,56 @@
+@startuml
+
+title Диаграмма контейнеров сервиса "КиноБездна"
+
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/refs/heads/master/C4_Container.puml
+
+Person(user, "Пользователь", "Пользователь системы 'КиноБездна'")
+System(cinemaAbyssSystem, "Система 'КиноБездна'")
+
+Container_Boundary(cinemaAbyssSystem, "Система 'КиноБездна'") {
+    Container(frontendApp, "Фронтенд системы", "React", "Отвечает за взаимодействие с пользователем")
+    Container(mobileApp, "Мобильное приложение", "Kotlin", "Позволяет пользоваться системой с мобильных устройств")
+    Container(smartTvApp, "Приложение Smart TV", "Kotlin", "Позволяет пользоваться системой со Smart TV")
+    Container(serviceMesh, "Service Mesh", "Istio", "Распределяет запросы по сервисам, выступает в качестве ACL, помогает осуществлять миграцию на микросервисы")
+    Container(authService, "Сервис авторизации", "Keycloak", "Отвечает за авторизацию пользователей")
+    ContainerDb(authDb, "БД Keycloak", "PostgreSQL", "Хранит авторизационные данные пользователей")
+    Container(profileService, "Сервис профиля пользователя", "Go", "Отвечает за данные пользователя (плейлисты, покупки, подписки)")
+    ContainerDb(profileDb, "БД профиля пользователя", "PostgreSQL", "Хранит данные профиля")
+    Container(paymentService, "Сервис платежей", "Go", "Обрабратывает платежи пользователей, взаимодействует с внешней платёжной системой")
+    Container(recommendationsService, "Сервис рекоммендаций", "Go", "Обрабратывает запросы рекоммендаций для пользователя")
+    Container(videoService, "Сервис видео", "Go", "Отвечает за просмотр видео")
+    Container(messageBroker, "Брокер сообщений", "Apache Kafka")
+    Container(metadataService, "Сервис метаданных", "Go", "Обрабатывает метаданные фильмов")
+    ContainerDb(metadataDb, "БД метаданных", "PostgreSQL", "Хранит метаданные фильмов")
+}
+
+System_Ext(recommendationsSystem, "Система рекомендаций")
+System_Ext(paymentSystem, "Внешняя платёжная система")
+System_Ext(onlineCinema, "Онлайн кинотеатры")
+
+Rel(user, frontendApp, "Использует систему")
+Rel(frontendApp, serviceMesh, "Все запросы пользователя")
+Rel(serviceMesh, authService, "Запросы авторизации/регистрации")
+Rel(authService, authDb, "Чтение авторизационных данных/Регистрация новых пользователей")
+Rel(metadataService, metadataDb, "Чтение/запись метаданных фильмов")
+Rel(profileService, profileDb, "Чтение/запись данных профиля")
+Rel(serviceMesh, profileService, "Запросы, относящиеся к профилю")
+Rel(profileService, messageBroker, "Оценки пользователя")
+Rel(messageBroker, metadataService, "Оценки пользователя")
+Rel(profileService, messageBroker, "Оплата покупок и подписок")
+Rel(messageBroker, paymentService, "Оплата покупок и подписок")
+Rel(paymentService, paymentSystem, "Платежи пользователей")
+Rel(serviceMesh, recommendationsService, "Запрос рекомендаций для пользователя")
+Rel(recommendationsService, profileService, "Запрос данных профиля для рекомендаций")
+Rel(recommendationsService, messageBroker, "Запрос рекомендаций")
+Rel(messageBroker, recommendationsSystem, "Запрос рекомендаций")
+Rel(videoService, profileService, "Запрос данных о покупках и подписках")
+Rel(videoService, onlineCinema, "Запрос видео для просмотра")
+Rel(serviceMesh, videoService, "Запрос видео для просмотра")
+Rel(user, mobileApp, "Использует систему")
+Rel(mobileApp, serviceMesh, "Запросы пользователя")
+Rel(user, smartTvApp, "Использует систему")
+Rel(smartTvApp, serviceMesh, "Запросы пользователя")
+Rel(metadataService, onlineCinema, "Запрос метаданных фильмов, обновление каталога")
+
+@enduml
